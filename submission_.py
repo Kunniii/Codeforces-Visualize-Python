@@ -2,6 +2,31 @@ from requests import get
 import json, sys, os
 from time import sleep, localtime
 
+def getRank(rankJson):
+    rating = rankJson['result'][-1]['newRating']
+    if rating >= 3000:
+        color = '#a00'
+    elif rating >= 2600:
+        color = '#f33'
+    elif rating >= 2400:
+        color = '#f77'
+    elif rating >= 2300:
+        color = '#fb5'
+    elif rating >= 2100:
+        color = '#fc8'
+    elif rating >= 1900:
+        color = '#f8f'
+    elif rating >= 1600:
+        color = '#aaf'
+    elif rating >= 1400:
+        color = '#7db'
+    elif rating >= 1200:
+        color ='#7f7'
+    else:
+        color = '#ccc'
+    return color
+
+
 def unique_list(l):
     temp = []
     for i in l:
@@ -22,23 +47,31 @@ except IndexError:
 
 if handle == '.':
     handle = 'poiminhcanh08092001'
-url = 'https://codeforces.com/api/user.status?handle=' + handle + '&from=1&count=6000';
+
+url = 'https://codeforces.com/api/user.status?handle=' + handle + '&from=1&count=6000'
+rankUrl = 'https://codeforces.com/api/user.rating?handle=' + handle
 print(url)
 loclTime = localtime()
 rawJson = json.loads(get(url).text)
-
-with open('submission_.html', 'a') as f:
-    pass
-
-fileDir = os.path.dirname(os.path.realpath('submission_.html')) + '/submission_.html'
-os.system(f'start chrome "{fileDir}"')
+rankJson = json.loads(get(rankUrl).text)
 
 status = rawJson['status']
 print(f'{loclTime.tm_year}-{loclTime.tm_mon}-{loclTime.tm_mday} @ {loclTime.tm_hour}:{loclTime.tm_min} | status: {status}')
+status = rankJson['status']
+print(f'{loclTime.tm_year}-{loclTime.tm_mon}-{loclTime.tm_mday} @ {loclTime.tm_hour}:{loclTime.tm_min} | status: {status}')
 
 result = rawJson['result']
+rankColor = getRank(rankJson)
 
-sleep(1)
+del rankJson
+del status
+
+with open('submission_.html', 'a') as f:
+    pass
+with open('yes_.html', 'a') as f:
+    pass
+with open('no_.html', 'a') as f:
+    pass
 
 # collect problems that are having the WRONG_ANSWER verdict
 for content in result:
@@ -65,28 +98,28 @@ with open('submission_.html','w', encoding='utf8') as f:
     print('<html>', file=f)
     
     print('<head>', file=f)
-    print(f"<title>{handle}'s Submission</title>", file=f)
+    print(f"<title>{handle} Submission</title>", file=f)
     print('<link rel="stylesheet" type="text/css" href="./style.css">', file=f)
     print('<meta name="viewport" content="width=device-width, initial-scale=1.0">', file=f)
     # print('<meta http-equiv="refresh" content="1"/>', file=f)
-    print(f'<h1><span class="handle">{handle}</span>\'s Submission</h1>', file=f)
+    print(f'<h1><a style="color:{rankColor};" href="https://codeforces.com/profile/{handle}">{handle}</a> Submission</h1>', file=f)
     print('</head>', file=f)
     
     print('<body>', file=f)
-    print(f'<br><br><h1><span class="handle">{handle}</span> has solved <span class="done">{len(solved_problem)}</span> in total, unable to solve <span class="not-done">{len(not_done_problem)}</span></h1>', file=f)
+    print(f'<br><br><h1><span style="color:{rankColor};">{handle}</span> has solved <span class="done"><a href="./yes_.html">{len(solved_problem)}</a></span> in total, unable to solve <span class="not-done"><a href="./no_.html">{len(not_done_problem)}</a></span></h1>', file=f)
     print('<hr>', file=f)
     
     print('<table>', file=f)
-    print('<tr><th>Problem\'s name</th><th>Solved</th><br><br></tr>', file=f)
+    print("<tr><th>Problem's name</th><th>Solved</th><br><br></tr>", file=f)
     written = []
     for name in problem_unique_name:
         if name in solved_problem and name not in written:
-            print(f'<tr><td>{name}</td><td class="done">YES</td></tr>', file=f)
+            print(f'<tr><td><a href="#">{name}</a></td><td class="done"><a href="./yes_.html">YES</a></td></tr>', file=f)
             written.append(name)
         elif name in not_done_problem and name not in written:
-            print(f'<tr><td>{name}</td><td class="not-done">NO</td></tr>', file=f)
+            print(f'<tr><td><a href="#">{name}</a></td><td class="not-done"><a href="./no_.html">NO</a></td></tr>', file=f)
             written.append(name)
-    print('</table>', file=f)
+    print('</table><br><br><table>', file=f)
 
 
     print('<div id="piechart"></div><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script><script type="text/javascript">google.charts.load(\'current\', {\'packages\':[\'corechart\']});google.charts.setOnLoadCallback(drawChart);function drawChart() {var data = google.visualization.arrayToDataTable([',file=f)
@@ -100,4 +133,57 @@ with open('submission_.html','w', encoding='utf8') as f:
     print('<div id="YNpiechart"></div><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script><script type="text/javascript">google.charts.load(\'current\', {\'packages\':[\'corechart\']});google.charts.setOnLoadCallback(drawChart);function drawChart() {var data = google.visualization.arrayToDataTable([',file=f)
     print(f"['Language', 'In total'],['YES', {len(solved_problem)}],['NO', {len(not_done_problem)}]]);",file=f)
     print("var options = {'title':'Solved Problem', pieSliceText: 'label',};\nvar chart = new google.visualization.PieChart(document.getElementById('YNpiechart'));\nchart.draw(data, options);}</script>", file=f)
-    print('</body></html>', file=f)
+    print('</table></body></html>', file=f)
+
+# create file yes_.html and no_.html
+with open('yes_.html','w', encoding='utf8') as f:
+    print('<html>', file=f)
+    
+    print('<head>', file=f)
+    print(f"<title>{handle} Solved</title>", file=f)
+    print('<link rel="stylesheet" type="text/css" href="./style.css">', file=f)
+    print('<meta name="viewport" content="width=device-width, initial-scale=1.0">', file=f)
+    # print('<meta http-equiv="refresh" content="1"/>', file=f)
+    print(f'<h1><a href="./submission_.html">Back to <span style="color:{rankColor};">{handle}</span> Submission</a></h1>', file=f)
+    print('</head>', file=f)
+    
+    print('<body>', file=f)
+    print(f'<br><br><h1><span style="color:{rankColor}">{handle}</span> solved <span class="done"><a href="./yes_.html">{len(solved_problem)}</a></span></h1>', file=f)
+    print('<hr>', file=f)
+    
+    print('<table>', file=f)
+    print('<tr><th>Problem\'s name</th></tr>', file=f)
+    written = []
+    for name in problem_unique_name:
+        if name in solved_problem and name not in written:
+            print(f'<tr><td>{name}</td></tr>', file=f)
+            written.append(name)
+    print('</table></body></html>', file=f)
+    
+    # create no_.html 
+    with open('no_.html','w', encoding='utf8') as f1:
+        print('<html>', file=f1)
+        
+        print('<head>', file=f1)
+        print(f"<title>{handle}'s Unsolved</title>", file=f1)
+        print('<link rel="stylesheet" type="text/css" href="./style.css">', file=f1)
+        print('<meta name="viewport" content="width=device-width, initial-scale=1.0">', file=f1)
+        # print('<meta http-equiv="refresh" content="1"/>', file=f)
+        print(f'<h1><a href="./submission_.html">Back to <span style="color:{rankColor};">{handle}</span> Submission</a></h1>', file=f1)
+        print('</head>', file=f1)
+        
+        print('<body>', file=f1)
+        print(f'<br><br><h1><span style="color:{rankColor}">{handle}</span> unable to solve <span class="not-done"><a href="./no_.html">{len(not_done_problem)}</a></span></h1>', file=f1)
+        print('<hr>', file=f1)
+        
+        print('<table>', file=f1)
+        print("<tr><th>Problem's name</th></tr>", file=f1)
+        written = []
+        for name in problem_unique_name:
+            if name in not_done_problem and name not in written:
+                print(f'<tr><td>{name}</td></tr>', file=f1)
+                written.append(name)
+        print('</table></body></html>', file=f1)
+
+fileDir = os.path.dirname(os.path.realpath('submission_.html')) + '/submission_.html'
+os.system(f'start chrome "{fileDir}"')
