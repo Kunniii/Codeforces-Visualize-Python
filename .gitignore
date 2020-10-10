@@ -129,6 +129,4 @@ dmypy.json
 .pyre/
 
 # File HTML
-submission_.html
-yes_.html
-no_.html
+*.html
