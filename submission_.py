@@ -7,7 +7,7 @@ def unique_list(l):
     for i in l:
         if i not in temp:
             temp.append(i)
-    yield temp
+    return temp
 
 problem_unique_name = []
 not_done_problem = []
@@ -89,15 +89,15 @@ with open('submission_.html','w', encoding='utf8') as f:
     print('</table>', file=f)
 
 
-     print('<div id="piechart"></div><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script><script type="text/javascript">google.charts.load(\'current\', {\'packages\':[\'corechart\']});google.charts.setOnLoadCallback(drawChart);function drawChart() {var data = google.visualization.arrayToDataTable([',file=f)
-    print('[\'Language\', \'In total\'],',file=f)
+    print('<div id="piechart"></div><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script><script type="text/javascript">google.charts.load(\'current\', {\'packages\':[\'corechart\']});google.charts.setOnLoadCallback(drawChart);function drawChart() {var data = google.visualization.arrayToDataTable([',file=f)
+    print("['Language', 'In total'],",file=f)
     for i in u_languages:
-        print(f'[\'{i}\', {int(languages.count(i))}],',file=f)
+        print(f"['{i}', {int(languages.count(i))}],",file=f)
     print(']);',file=f)
-    print('var options = {\'title\':\'Programing Language\', pieSliceText: \'label\',};\nvar chart = new google.visualization.PieChart(document.getElementById(\'piechart\'));\nchart.draw(data, options);}</script>', file=f)
+    print("var options = {'title':'Programing Language', pieSliceText: 'label',};\nvar chart = new google.visualization.PieChart(document.getElementById('piechart'));\nchart.draw(data, options);}</script>", file=f)
 
 
     print('<div id="YNpiechart"></div><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script><script type="text/javascript">google.charts.load(\'current\', {\'packages\':[\'corechart\']});google.charts.setOnLoadCallback(drawChart);function drawChart() {var data = google.visualization.arrayToDataTable([',file=f)
-    print(f'[\'Language\', \'In total\'],[\'YES\', {len(solved_problem)}],[\'NO\', {len(not_done_problem)}]]);',file=f)
-    print('var options = {\'title\':\'Solved Problem\', pieSliceText: \'label\',};var chart = new google.visualization.PieChart(document.getElementById(\'YNpiechart\'));chart.draw(data, options);}</script>', file=f)
-    print('</body>\n</html>', file=f)
+    print(f"['Language', 'In total'],['YES', {len(solved_problem)}],['NO', {len(not_done_problem)}]]);",file=f)
+    print("var options = {'title':'Solved Problem', pieSliceText: 'label',};\nvar chart = new google.visualization.PieChart(document.getElementById('YNpiechart'));\nchart.draw(data, options);}</script>", file=f)
+    print('</body></html>', file=f)
