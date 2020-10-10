@@ -7,7 +7,7 @@ def unique_list(l):
     for i in l:
         if i not in temp:
             temp.append(i)
-    return temp
+    yield temp
 
 problem_unique_name = []
 not_done_problem = []
@@ -27,7 +27,11 @@ print(url)
 loclTime = localtime()
 rawJson = json.loads(get(url).text)
 
-os.system('start chrome "submission_.html"')
+with open('submission_.html', 'a') as f:
+    pass
+
+fileDir = os.path.dirname(os.path.realpath('submission_.html')) + '/submission_.html'
+os.system(f'start chrome "{fileDir}"')
 
 status = rawJson['status']
 print(f'{loclTime.tm_year}-{loclTime.tm_mon}-{loclTime.tm_mday} @ {loclTime.tm_hour}:{loclTime.tm_min} | status: {status}')
@@ -61,11 +65,11 @@ with open('submission_.html','w', encoding='utf8') as f:
     print('<html>', file=f)
     
     print('<head>', file=f)
-    print('<title>{}\'s Submission</title>'.format(handle), file=f)
+    print(f"<title>{handle}'s Submission</title>", file=f)
     print('<link rel="stylesheet" type="text/css" href="./style.css">', file=f)
     print('<meta name="viewport" content="width=device-width, initial-scale=1.0">', file=f)
     # print('<meta http-equiv="refresh" content="1"/>', file=f)
-    print('<h1><span class="handle">{}</span> Submission</h1>'.format(handle), file=f)
+    print(f'<h1><span class="handle">{handle}</span>\'s Submission</h1>', file=f)
     print('</head>', file=f)
     
     print('<body>', file=f)
@@ -74,19 +78,14 @@ with open('submission_.html','w', encoding='utf8') as f:
     
     print('<table>', file=f)
     print('<tr><th>Problem\'s name</th><th>Solved</th><br><br></tr>', file=f)
-    yes = 0
-    no = 0
     written = []
     for name in problem_unique_name:
         if name in solved_problem and name not in written:
             print(f'<tr><td>{name}</td><td class="done">YES</td></tr>', file=f)
             written.append(name)
-            yes += 1
         elif name in not_done_problem and name not in written:
             print(f'<tr><td>{name}</td><td class="not-done">NO</td></tr>', file=f)
             written.append(name)
-            no += 1
-
     print('</table>', file=f)
 
 
@@ -95,11 +94,8 @@ with open('submission_.html','w', encoding='utf8') as f:
     for i in u_languages:
         print(f'[\'{i}\', {int(languages.count(i))}],',file=f)
     print(']);',file=f)
-    print('var options = {\'title\':\'Programing Language\', is3D: true, pieSliceText: \'label\',};\nvar chart = new google.visualization.PieChart(document.getElementById(\'piechart\'));\nchart.draw(data, options);}</script>', file=f)
-
-
+    print('var options = {\'title\':\'Programing Language\', pieSliceText: \'label\',};\nvar chart = new google.visualization.PieChart(document.getElementById(\'piechart\'));\nchart.draw(data, options);}</script>', file=f)
     print('<div id="YNpiechart"></div><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script><script type="text/javascript">google.charts.load(\'current\', {\'packages\':[\'corechart\']});google.charts.setOnLoadCallback(drawChart);function drawChart() {var data = google.visualization.arrayToDataTable([',file=f)
-    print('[\'Language\', \'In total\'],[\'YES\', {}],[\'NO\', {}]]);'.format(yes, no),file=f)
-    print('var options = {\'title\':\'Solved Problem\', is3D: true, pieSliceText: \'label\',};var chart = new google.visualization.PieChart(document.getElementById(\'YNpiechart\'));chart.draw(data, options);}</script>', file=f)
+    print(f'[\'Language\', \'In total\'],[\'YES\', {len(solved_problem)}],[\'NO\', {len(not_done_problem)}]]);',file=f)
+    print('var options = {\'title\':\'Solved Problem\', pieSliceText: \'label\',};var chart = new google.visualization.PieChart(document.getElementById(\'YNpiechart\'));chart.draw(data, options);}</script>', file=f)
     print('</body>\n</html>', file=f)
-
