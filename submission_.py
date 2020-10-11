@@ -35,8 +35,8 @@ def unique_list(l):
     return temp
 
 problem_unique_name = []
-not_done_problem = []
-solved_problem = []
+not_done_problem = {}
+solved_problem = {}
 u_languages = []
 languages = []
 
@@ -76,12 +76,12 @@ with open('no_.html', 'a') as f:
 # collect problems that are having the WRONG_ANSWER verdict
 for content in result:
     if content['problem']['name'] not in not_done_problem and content['verdict'] != 'OK':
-        not_done_problem.append(content['problem']['name'])
+        not_done_problem.update({str(content['problem']['contestId']) + '/' + content['problem']['index'] : content['problem']['name']})
 
 # collect problems that have been solved
 for content in result:
     if content['problem']['name'] not in solved_problem and content['verdict'] == 'OK':
-        solved_problem.append(content['problem']['name'])
+        solved_problem.update({str(content['problem']['contestId']) + '/' + content['problem']['index'] : content['problem']['name']})
         languages.append(content['programmingLanguage'])
 
 # collect unique problem's name
@@ -90,7 +90,7 @@ for content in result:
         problem_unique_name.append(content['problem']['name'])
 
 # check if problem has been solved
-not_done_problem = [name for name in not_done_problem if name not in solved_problem]
+not_done_problem = {url:name for (url,name) in not_done_problem.items() if name not in solved_problem.values()}
 
 u_languages = unique_list(languages)
 
@@ -110,16 +110,16 @@ with open('submission_.html','w', encoding='utf8') as f:
     print('<hr>', file=f)
     
     print('<table>', file=f)
-    print("<tr><th>Problem's name</th><th>Solved</th><br><br></tr>", file=f)
+    print("<tr><th>Problem's name</th></tr>", file=f)
     written = []
     for name in problem_unique_name:
-        if name in solved_problem and name not in written:
-            print(f'<tr><td><a href="#">{name}</a></td><td class="done"><a href="./yes_.html">YES</a></td></tr>', file=f)
+        if name in solved_problem.values() and name not in written:
+            print(f'<tr><td><a class="done" href="https://codeforces.com/problemset/problem/{list(solved_problem.keys())[list(solved_problem.values()).index(name)]}">{name}</a></td></tr>', file=f)
             written.append(name)
-        elif name in not_done_problem and name not in written:
-            print(f'<tr><td><a href="#">{name}</a></td><td class="not-done"><a href="./no_.html">NO</a></td></tr>', file=f)
+        elif name in not_done_problem.values() and name not in written:
+            print(f'<tr><td><a class="not-done" href="https://codeforces.com/problemset/problem/{list(not_done_problem.keys())[list(not_done_problem.values()).index(name)]}">{name}</a></td></tr>', file=f)
             written.append(name)
-    print('</table><br><br><table>', file=f)
+    print('</table><table>', file=f)
 
 
     print('<div id="piechart"></div><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script><script type="text/javascript">google.charts.load(\'current\', {\'packages\':[\'corechart\']});google.charts.setOnLoadCallback(drawChart);function drawChart() {var data = google.visualization.arrayToDataTable([',file=f)
@@ -155,8 +155,8 @@ with open('yes_.html','w', encoding='utf8') as f:
     print('<tr><th>Problem\'s name</th></tr>', file=f)
     written = []
     for name in problem_unique_name:
-        if name in solved_problem and name not in written:
-            print(f'<tr><td>{name}</td></tr>', file=f)
+        if name in solved_problem.values() and name not in written:
+            print(f'<tr><td><a class="done" href="https://codeforces.com/problemset/problem/{list(solved_problem.keys())[list(solved_problem.values()).index(name)]}">{name}</a></td></tr>', file=f)
             written.append(name)
     print('</table></body></html>', file=f)
     
@@ -178,10 +178,10 @@ with open('yes_.html','w', encoding='utf8') as f:
         
         print('<table>', file=f1)
         print("<tr><th>Problem's name</th></tr>", file=f1)
-        written = []
+        
         for name in problem_unique_name:
-            if name in not_done_problem and name not in written:
-                print(f'<tr><td>{name}</td></tr>', file=f1)
+            if name in not_done_problem.values() and name not in written:
+                print(f'<tr><td><a class="not-done" href="https://codeforces.com/problemset/problem/{list(not_done_problem.keys())[list(not_done_problem.values()).index(name)]}">{name}</a></td></tr>', file=f1)
                 written.append(name)
         print('</table></body></html>', file=f1)
 

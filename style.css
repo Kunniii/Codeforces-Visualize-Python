@@ -21,17 +21,14 @@ a:hover {
     text-decoration: underline;
 }
 
-.done,
-.not-done {
-    font-weight: 800;
-}
-
-.done a {
+.done a, .done {
     color: limegreen !important;
+    font-weight: 5rem;
 }
 
-.not-done a {
+.not-done a, .not-done {
     color: red !important;
+    font-weight: 5rem;
 }
 table {
     border-radius: 15px;
@@ -77,7 +74,8 @@ td {
 }
 
 tr:hover {
-    font-size: 1.5rem;
+    font-size: 1.7rem;
+    font-weight: 800;
     transition: 500ms;
     background-color: #f5f5f5;
     cursor: pointer;
