@@ -102,7 +102,7 @@ with open('submission_.html','w', encoding='utf8') as f:
     print('<link rel="stylesheet" type="text/css" href="./style.css">', file=f)
     print('<meta name="viewport" content="width=device-width, initial-scale=1.0">', file=f)
     # print('<meta http-equiv="refresh" content="1"/>', file=f)
-    print(f'<h1><a style="color:{rankColor};" href="https://codeforces.com/profile/{handle}">{handle}</a> Submission</h1>', file=f)
+    print(f'<h1><a style="color:{rankColor};" href="https://codeforces.com/profile/{handle}" target="_blank">{handle}</a> Submission</h1>', file=f)
     print('</head>', file=f)
     
     print('<body>', file=f)
