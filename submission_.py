@@ -114,10 +114,10 @@ with open('submission_.html','w', encoding='utf8') as f:
     written = []
     for name in problem_unique_name:
         if name in solved_problem.values() and name not in written:
-            print(f'<tr><td><a class="done" href="https://codeforces.com/problemset/problem/{list(solved_problem.keys())[list(solved_problem.values()).index(name)]}">{name}</a></td></tr>', file=f)
+            print(f'<tr><td><a class="done" href="https://codeforces.com/problemset/problem/{list(solved_problem.keys())[list(solved_problem.values()).index(name)]}" target="_blank">{name}</a></td></tr>', file=f)
             written.append(name)
         elif name in not_done_problem.values() and name not in written:
-            print(f'<tr><td><a class="not-done" href="https://codeforces.com/problemset/problem/{list(not_done_problem.keys())[list(not_done_problem.values()).index(name)]}">{name}</a></td></tr>', file=f)
+            print(f'<tr><td><a class="not-done" href="https://codeforces.com/problemset/problem/{list(not_done_problem.keys())[list(not_done_problem.values()).index(name)]}" target="_blank">{name}</a></td></tr>', file=f)
             written.append(name)
     print('</table><table>', file=f)
 
@@ -156,7 +156,7 @@ with open('yes_.html','w', encoding='utf8') as f:
     written = []
     for name in problem_unique_name:
         if name in solved_problem.values() and name not in written:
-            print(f'<tr><td><a class="done" href="https://codeforces.com/problemset/problem/{list(solved_problem.keys())[list(solved_problem.values()).index(name)]}">{name}</a></td></tr>', file=f)
+            print(f'<tr><td><a class="done" href="https://codeforces.com/problemset/problem/{list(solved_problem.keys())[list(solved_problem.values()).index(name)]}" target="_blank">{name}</a></td></tr>', file=f)
             written.append(name)
     print('</table></body></html>', file=f)
     
@@ -181,7 +181,7 @@ with open('yes_.html','w', encoding='utf8') as f:
         
         for name in problem_unique_name:
             if name in not_done_problem.values() and name not in written:
-                print(f'<tr><td><a class="not-done" href="https://codeforces.com/problemset/problem/{list(not_done_problem.keys())[list(not_done_problem.values()).index(name)]}">{name}</a></td></tr>', file=f1)
+                print(f'<tr><td><a class="not-done" href="https://codeforces.com/problemset/problem/{list(not_done_problem.keys())[list(not_done_problem.values()).index(name)]}" target="_blank">{name}</a></td></tr>', file=f1)
                 written.append(name)
         print('</table></body></html>', file=f1)
 
