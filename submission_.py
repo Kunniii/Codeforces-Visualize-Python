@@ -1,4 +1,4 @@
-from requests import get
+from requests import *
 import json, sys, os
 from time import sleep, localtime
 
